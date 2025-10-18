@@ -151,7 +151,7 @@ function DetailsPageContent() {
             <button
               onClick={openModal}
               disabled={!trailerUrl}
-              className={`mt-4 w-full inline-flex items-center gap-2 justify-center bg-yellow-400 text-black px-4 py-2 sm:px-6 sm:py-3 rounded-lg font-medium text-sm sm:text-base hover:bg-yellow-500 transition-colors ${
+              className={`mt-4 w-full inline-flex items-center gap-2 justify-center bg-[#961200] text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full font-medium text-sm sm:text-base hover:bg-[#961200]/70 transition-colors ${
                 !trailerUrl ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
               }`}
             >
