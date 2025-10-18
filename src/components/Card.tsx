@@ -37,15 +37,14 @@ export default function Card({ media }: { media: TMDBItem }) {
       </Link>
 
       <div className='p-4 flex flex-col gap-2'>
-        <p className='text-xs sm:text-sm text-yellow-400'>
-          ⭐ {voteAverage != null ? voteAverage.toFixed(1) : 'N/A'}
-        </p>
         <Link href={`/details?id=${id}&media_type=${mediaType}`}>
           <h3 className='text-base sm:text-lg my-1 font-semibold text-white line-clamp-2 h-12 sm:h-14 cursor-pointer hover:underline'>
             {displayTitle}
           </h3>
         </Link>
-
+        <p className='text-xs sm:text-sm text-yellow-400'>
+          ⭐ {voteAverage != null ? voteAverage.toFixed(1) : 'N/A'}
+        </p>
       </div>
     </div>
   );
