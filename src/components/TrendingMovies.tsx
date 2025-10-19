@@ -77,7 +77,7 @@ export default function TrendingMovies() {
                 isLoading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
               }`}
             >
-              <ChevronRight className='size-10 items-center' />
+              <ChevronRight className='size-10 items-center justify-center' />
             </button>
           )}
         </div>

@@ -4,18 +4,19 @@ import Image from 'next/image';
 import Link from 'next/link';
 import type { TMDBItem, MediaType } from '@/types/tmdb';
 
-
-
 export default function Card({ media }: { media: TMDBItem }) {
   // derive fields safely from union type
   const id = media.id;
   const posterPath = media.poster_path;
   const voteAverage = media.vote_average;
-  const mediaType: MediaType = media.media_type ?? ('title' in media ? 'movie' : 'tv');
-  const displayTitle = (
-    'title' in media ? media.title : 'name' in media ? media.name : undefined
-  ) ?? 'Untitled';
-
+  const mediaType: MediaType =
+    media.media_type ?? ('title' in media ? 'movie' : 'tv');
+  const displayTitle =
+    ('title' in media
+      ? media.title
+      : 'name' in media
+      ? media.name
+      : undefined) ?? 'Untitled';
 
   return (
     <div className='flex-none w-44 md:w-52 lg:w-56 xl:w-60 min-w-[176px] max-w-[240px] bg-[#18181b] rounded-lg overflow-hidden shadow-lg snap-start'>
