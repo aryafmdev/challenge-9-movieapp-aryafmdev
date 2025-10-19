@@ -140,7 +140,7 @@ export default function FavoritesPage() {
                       {displayTitle}
                     </h3>
                   </Link>
-                  <p className='mt-1 text-sm text-yellow-400'>
+                  <p className='mt-1 text-sm text-white'>
                     ⭐ {voteAverage != null ? voteAverage.toFixed(1) : 'N/A'}/10
                   </p>
                   <p className='mt-2 text-sm text-gray-300 line-clamp-3'>
@@ -152,8 +152,8 @@ export default function FavoritesPage() {
                       onClick={() => openTrailer(item)}
                       className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#961200] text-white font-semibold hover:bg-[#961200]/80'
                     >
-                      <PlayCircle className='w-4 h-4' />
                       Watch Trailer
+                      <PlayCircle className='size-5' />
                     </button>
                   </div>
                 </div>

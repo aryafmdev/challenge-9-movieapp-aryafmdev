@@ -7,11 +7,17 @@ export default function Footer() {
       <div className='container mx-auto px-4 py-4 flex items-center justify-between'>
         {/* Logo section */}
         <Link href='/' className='flex flex-col items-center'>
-          <Image src='/Logo.svg' alt='Logo' width={130} height={40} />
+          <Image
+            src='/Logo.svg'
+            alt='Logo'
+            width={130}
+            height={40}
+            className='size-20 sm:size-24 md:size-28'
+          />
         </Link>
 
         {/* Right: Copyright text with icon */}
-        <div className='flex items-center space-x-1 text-base text-sm md:text-base lg:text-lg'>
+        <div className='flex items-center space-x-1 text-xs md:text-sm lg:text-base'>
           <span>Copyright &copy; 2025 Movie Explorer</span>
         </div>
       </div>
