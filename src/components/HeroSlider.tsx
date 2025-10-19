@@ -123,7 +123,7 @@ export default function HeroSlider({
   };
 
   return (
-    <section className='relative min-h-[360px] sm:min-h-[480px] md:min-h-[720px] w-full'>
+    <section className='relative min-h-[720px] w-full'>
       <Swiper
         modules={[Autoplay, Pagination, EffectFade]}
         effect='fade'
@@ -138,7 +138,7 @@ export default function HeroSlider({
         {/* map through movies to create a slide for each movie */}
         {movies.map((media) => (
           <SwiperSlide key={media.id}>
-            <div className='relative w-full h-[360px] sm:h-[480px] md:h-[720px]'>
+            <div className='relative w-full h-[720px]'>
               <div
                 className='absolute inset-0 bg-cover bg-center '
                 style={{
@@ -148,24 +148,24 @@ export default function HeroSlider({
                 }}
               ></div>
               <div className='absolute inset-0 bg-gradient-to-b from-black/10 to-black'></div>
-              <div className='absolute inset-0 flex items-center sm:items-end p-4 sm:p-8 md:p-20 text-white max-w-xs sm:max-w-md md:max-w-2xl'>
+              <div className='absolute inset-0 flex items-end px-20 pt-20 pb-8 text-white max-w-2xl'>
                 <div>
                   <Link
                     href={`/details?id=${media.id}&media_type=${
                       media.media_type ?? 'movie'
                     }`}
                   >
-                    <h1 className='text-2xl sm:text-2xl md:text-5xl font-bold leading-tight sm:leading-snug'>
+                    <h1 className='text-5xl font-bold leading-tight'>
                       {getMediaTitle(media)}
                     </h1>
                   </Link>
-                  <p className='text-sm sm:text-sm md:text-lg mt-0.5 sm:mt-2 text-yellow-400 font-semibold sm:leading-5'>
+                  <p className='text-lg mt-2 text-yellow-400 font-semibold'>
                     {getGenres(media)}
                   </p>
-                  <p className='text-sm sm:text-sm md:text-lg mt-5 line-clamp-5 hidden sm:block sm:leading-5'>
+                  <p className='text-lg mt-5 line-clamp-5'>
                     {media.overview || 'No Description Available'}
                   </p>
-                  <p className='text-sm sm:text-sm md:text-lg mt-5 sm:leading-5'>
+                  <p className='text-lg mt-5'>
                     <span className='mr-4'>
                       ⭐{' '}
                       {media.vote_average != null
@@ -179,11 +179,11 @@ export default function HeroSlider({
                       </>
                     )}
                   </p>
-                  <div className='mt-5 sm:mt-8 flex items-center gap-3'>
+                  <div className='mt-8 flex flex-col sm:flex-row md:flex-row items-stretch md:items-center gap-3'>
                     <button
                       onClick={() => openModal(media)}
                       disabled={!media.id}
-                      className={`inline-flex items-center gap-2 bg-[#961200] px-4 sm:px-4 py-2 sm:py-2 md:px-6 md:py-3 text-white font-semibold rounded-full hover:bg-[#961200]/70 transition text-sm sm:text-base md:text-base ${
+                      className={`inline-flex items-center justify-center text-center gap-2 bg-[#961200] px-6 py-3 text-white font-semibold rounded-full hover:bg-[#961200]/70 transition text-base w-full sm:flex-1 md:flex-1 ${
                         !media.id
                           ? 'cursor-not-allowed opacity-50'
                           : 'cursor-pointer'
@@ -200,7 +200,7 @@ export default function HeroSlider({
                           media_type: media.media_type ?? 'movie',
                         },
                       }}
-                      className={`inline-block bg-[#0F1117] px-4 sm:px-4 py-2 sm:py-2 md:px-6 md:py-3 text-white font-semibold rounded-full border border-white/10 hover:bg-[#0F1117]/80 transition text-sm sm:text-base md:text-base ${
+                      className={`inline-block text-center bg-[#0F1117] px-6 py-3 text-white font-semibold rounded-full border border-white/10 hover:bg-[#0F1117]/80 transition text-base w-full sm:flex-1 md:flex-1 ${
                         !media.id
                           ? 'pointer-events-none opacity-50'
                           : 'cursor-pointer'
@@ -218,13 +218,13 @@ export default function HeroSlider({
 
       {/* the navigation buttons */}
       {movies.length > 1 && (
-        <div className='absolute right-4 sm:right-8 md:right-12 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-1'>
+        <div className='absolute right-12 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-1'>
           {movies.map((_, index) => (
             <button
               key={index}
               onClick={() => handleButtonClick(index)}
               aria-label={`slide ${index + 1}`}
-              className={`w-4 h-4 sm:w-4 sm:h-4 md:w-5 md:h-5 rounded-full border-2 transition-colors ${
+              className={`w-5 h-5 rounded-full border-2 transition-colors ${
                 currentSlide === index
                   ? 'bg-yellow-400 border-yellow-400'
                   : 'bg-transparent border-white'

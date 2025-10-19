@@ -1,85 +1,85 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import TrailerModal from '@/components/TrailerModal'
-import type { TMDBItem, MediaType } from '@/types/tmdb'
-import { Heart, PlayCircle } from 'lucide-react'
+import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import TrailerModal from '@/components/TrailerModal';
+import type { TMDBItem, MediaType } from '@/types/tmdb';
+import { Heart, PlayCircle } from 'lucide-react';
 
 function getTitle(item: TMDBItem): string {
   return (
     ('title' in item ? item.title : 'name' in item ? item.name : undefined) ??
     'Untitled'
-  )
+  );
 }
 
 function getMediaType(item: TMDBItem): MediaType {
-  return item.media_type ?? ('title' in item ? 'movie' : 'tv')
+  return item.media_type ?? ('title' in item ? 'movie' : 'tv');
 }
 
 export default function FavoritesPage() {
-  const [favorites, setFavorites] = useState<TMDBItem[]>([])
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [trailerUrl, setTrailerUrl] = useState<string | null>(null)
-  const [modalTitle, setModalTitle] = useState<string | undefined>(undefined)
+  const [favorites, setFavorites] = useState<TMDBItem[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
+  const [modalTitle, setModalTitle] = useState<string | undefined>(undefined);
 
   // load favorites from localStorage
   useEffect(() => {
     try {
-      const raw = localStorage.getItem('favorites')
+      const raw = localStorage.getItem('favorites');
       if (raw) {
-        const parsed: TMDBItem[] = JSON.parse(raw)
-        setFavorites(Array.isArray(parsed) ? parsed : [])
+        const parsed: TMDBItem[] = JSON.parse(raw);
+        setFavorites(Array.isArray(parsed) ? parsed : []);
       }
     } catch (e) {
-      setFavorites([])
+      setFavorites([]);
     }
-  }, [])
+  }, []);
 
   const removeFavorite = (id: number) => {
     setFavorites((prev) => {
-      const next = prev.filter((item) => item.id !== id)
-      localStorage.setItem('favorites', JSON.stringify(next))
-      return next
-    })
-  }
+      const next = prev.filter((item) => item.id !== id);
+      localStorage.setItem('favorites', JSON.stringify(next));
+      return next;
+    });
+  };
 
   const openTrailer = async (item: TMDBItem) => {
-    const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY
-    const mediaType = getMediaType(item)
+    const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+    const mediaType = getMediaType(item);
     try {
       const res = await fetch(
         `https://api.themoviedb.org/3/${mediaType}/${item.id}/videos?api_key=${apiKey}&language=en-US`,
         { cache: 'no-store' }
-      )
+      );
       if (res.ok) {
         const data = (await res.json()) as {
-          results?: Array<{ site: string; type: string; key: string }>
-        }
+          results?: Array<{ site: string; type: string; key: string }>;
+        };
         const trailer = data.results?.find(
           (v) => v.site === 'YouTube' && v.type === 'Trailer'
-        )
+        );
         const url = trailer
           ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&playsinline=1&mute=1&controls=1&rel=0&modestbranding=1`
-          : null
-        setTrailerUrl(url)
-        setModalTitle(getTitle(item))
-        setIsModalOpen(!!url)
+          : null;
+        setTrailerUrl(url);
+        setModalTitle(getTitle(item));
+        setIsModalOpen(!!url);
       } else {
-        setTrailerUrl(null)
-        setIsModalOpen(false)
+        setTrailerUrl(null);
+        setIsModalOpen(false);
       }
     } catch (err) {
-      setTrailerUrl(null)
-      setIsModalOpen(false)
+      setTrailerUrl(null);
+      setIsModalOpen(false);
     }
-  }
+  };
 
   const closeModal = () => {
-    setIsModalOpen(false)
-    setTrailerUrl(null)
-  }
+    setIsModalOpen(false);
+    setTrailerUrl(null);
+  };
 
   return (
     <section className='container mx-auto px-6 sm:px-12 py-20'>
@@ -106,11 +106,12 @@ export default function FavoritesPage() {
       ) : (
         <div className='space-y-8'>
           {favorites.map((item) => {
-            const displayTitle = getTitle(item)
-            const overview = 'overview' in item ? item.overview : ''
-            const posterPath = 'poster_path' in item ? item.poster_path : null
-            const voteAverage = 'vote_average' in item ? item.vote_average : undefined
-            const mediaType = getMediaType(item)
+            const displayTitle = getTitle(item);
+            const overview = 'overview' in item ? item.overview : '';
+            const posterPath = 'poster_path' in item ? item.poster_path : null;
+            const voteAverage =
+              'vote_average' in item ? item.vote_average : undefined;
+            const mediaType = getMediaType(item);
             return (
               <div
                 key={item.id}
@@ -147,10 +148,10 @@ export default function FavoritesPage() {
                     {overview || 'No overview available.'}
                   </p>
 
-                  <div className='mt-3'>
+                  <div className='mt-3 text-center md:text-left'>
                     <button
                       onClick={() => openTrailer(item)}
-                      className='inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#961200] text-white font-semibold hover:bg-[#961200]/80'
+                      className='inline-flex justify-center gap-2 px-4 py-2 rounded-full bg-[#961200] text-white font-semibold hover:bg-[#961200]/80 w-full md:w-auto'
                     >
                       Watch Trailer
                       <PlayCircle className='size-5' />
@@ -167,7 +168,7 @@ export default function FavoritesPage() {
                   <Heart className='w-4 h-4 text-red-500 fill-current' />
                 </button>
               </div>
-            )
+            );
           })}
         </div>
       )}
@@ -179,5 +180,5 @@ export default function FavoritesPage() {
         title={modalTitle}
       />
     </section>
-  )
+  );
 }

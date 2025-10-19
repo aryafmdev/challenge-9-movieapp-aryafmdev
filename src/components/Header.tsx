@@ -21,6 +21,7 @@ export default function Header() {
   const [searchTerm, setSearchTerm] = useState(''); // state to store the search input value
   const [suggestions, setSuggestions] = useState<TMDBItem[]>([]); // state to store the search suggestions results
   const [isLoading, setIsLoading] = useState(false); // state to track loading status
+  const [isMobileSearchVisible, setIsMobileSearchVisible] = useState(false);
 
   // navigation links
   const navLinks = [
@@ -113,21 +114,38 @@ export default function Header() {
         {/* logo section */}
         <div className='flex items-center justify-between w-full md:w-auto'>
           <Link href='/' className='flex flex-col items-center'>
-            <Image src='/Logo.svg' alt='Logo' width={130} height={40} />
+            <Image
+              src='/Logo.svg'
+              alt='Logo'
+              width={130}
+              height={40}
+              className='z-200'
+            />
           </Link>
 
-          {/* mobile menu toggle button */}
-          <motion.button
-            className='md:hidden text-white hover:text-white/80 cursor-pointer'
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            whileTap={{ scale: 0.9 }}
-          >
-            {isMenuOpen ? (
-              <X className='w-6 h-6' />
-            ) : (
-              <Menu className='w-6 h-6' />
-            )}
-          </motion.button>
+          {/* mobile controls: search + menu */}
+          <div className='md:hidden flex items-center gap-4'>
+            <motion.button
+              className='text-white hover:text-white/80 cursor-pointer'
+              onClick={() => setIsMobileSearchVisible(!isMobileSearchVisible)}
+              whileTap={{ scale: 0.9 }}
+              aria-label='Toggle search'
+            >
+              <Search className='w-6 h-6' />
+            </motion.button>
+            <motion.button
+              className='text-white hover:text-white/80 cursor-pointer relative z-200'
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              whileTap={{ scale: 0.9 }}
+              aria-label='Toggle menu'
+            >
+              {isMenuOpen ? (
+                <X className='w-6 h-6 relative z-200' />
+              ) : (
+                <Menu className='w-6 h-6' />
+              )}
+            </motion.button>
+          </div>
         </div>
 
         {/* navigation links */}
@@ -243,105 +261,140 @@ export default function Header() {
         </motion.div>
       </div>
 
+      {/* mobile search overlay */}
+      <AnimatePresence>
+        {isMobileSearchVisible && (
+          <motion.div
+            className='sm:hidden backdrop-blur-xs bg-[rgba(24,24,27,0.6)] z-50 absolute left-0 top-full w-full px-4 py-4'
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: -20, opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className='relative w-full'>
+              <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400' />
+              <input
+                type='text'
+                placeholder='Search Movie'
+                className='w-full pl-10 pr-4 py-2 bg-[#252B37] text-gray-300 focus:outline-none placeholder-gray-400 rounded-2xl border border-white/10 focus:border-white/30'
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
+              />
+              <AnimatePresence>
+                {isSearchOpen && (
+                  <motion.div
+                    className='absolute top-full mt-1 w-full bg-[#18181b] border border-gray-500 rounded-lg shadow-lg z-50'
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {suggestions.length > 0 ? (
+                      suggestions.map((item) => (
+                        <Link
+                          key={item.id}
+                          href={
+                            isMovieItem(item)
+                              ? {
+                                  pathname: '/details',
+                                  query: { id: item.id, media_type: 'movie' },
+                                }
+                              : {
+                                  pathname: '/details',
+                                  query: { id: item.id, media_type: 'tv' },
+                                }
+                          }
+                          onClick={() => {
+                            setIsSearchOpen(false);
+                            setSearchTerm('');
+                            setSuggestions([]);
+                            setIsMobileSearchVisible(false);
+                          }}
+                        >
+                          <div className='flex items-center gap-2 p-2 hover:bg-[#252525] rounded-lg cursor-pointer'>
+                            <Image
+                              src={
+                                item.poster_path
+                                  ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
+                                  : '/default-poster.jpg'
+                              }
+                              alt={
+                                isMovieItem(item)
+                                  ? item.title || 'Unnamed'
+                                  : item.name || 'Unnamed'
+                              }
+                              width={32}
+                              height={48}
+                              className='w-8 aspect-[2/3] object-cover rounded'
+                              quality={75}
+                            />
+                            <div className='flex-1'>
+                              <h3 className='text-sm text-white line-clamp-2 h-10'>
+                                {isMovieItem(item)
+                                  ? item.title || 'Unnamed'
+                                  : item.name || 'Unnamed'}
+                              </h3>
+                              <p>
+                                {(isMovieItem(item)
+                                  ? item.release_date
+                                  : item.first_air_date
+                                )?.split('-')[0] || 'N/A'}
+                              </p>
+                            </div>
+                          </div>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className='p-2 text-sm text-center text-gray-400'>
+                        No Results Found
+                      </div>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* mobile menu */}
       <motion.div
-        className={`md:hidden backdrop-blur-xs bg-[rgba(24,24,27,0.6)] z-50 absolute left-0 top-full w-full px-4 py-4 ${
+        className={`md:hidden h-[100vh] bg-black z-50 absolute left-0 top-0 w-full px-4 py-4 ${
           isMenuOpen ? 'block' : 'hidden'
         }`}
         initial={{ y: -20, opacity: 0 }}
         animate={isMenuOpen ? { y: 0, opacity: 1 } : { y: -20, opacity: 0 }}
         transition={{ duration: 0.3 }}
       >
-        {/* mobile search bar */}
-        <motion.div className='relative w-full mb-4'>
-          <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400' />
-          <input
-            type='text'
-            placeholder='Search Movie'
-            className='w-full pl-10 pr-4 py-2 bg-[#252B37] text-gray-300 focus:outline-none placeholder-gray-400 rounded-2xl border border-white/10 focus:border-white/30'
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={handleSearchKeyDown}
-          />
-
-          <AnimatePresence>
-            {isSearchOpen && (
-              <motion.div
-                className='absolute top-full mt-1 w-full bg-[#18181b] border border-gray-500 rounded-lg shadow-lg z-50'
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-              >
-                {/* render suggestions or no results found message */}
-                {suggestions.length > 0 ? (
-                  suggestions.map((item) => (
-                    <Link
-                      key={item.id}
-                      href={
-                        isMovieItem(item)
-                          ? {
-                              pathname: '/details',
-                              query: { id: item.id, media_type: 'movie' },
-                            }
-                          : {
-                              pathname: '/details',
-                              query: { id: item.id, media_type: 'tv' },
-                            }
-                      }
-                      onClick={() => {
-                        setIsSearchOpen(false);
-                        setSearchTerm('');
-                        setSuggestions([]);
-                        setIsMenuOpen(false);
-                      }}
-                    >
-                      <div className='flex items-center gap-2 p-2 hover:bg-[#252525] rounded-lg cursor-pointer'>
-                        <Image
-                          src={
-                            item.poster_path
-                              ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
-                              : '/default-poster.jpg'
-                          }
-                          alt={
-                            isMovieItem(item)
-                              ? item.title || 'Unnamed'
-                              : item.name || 'Unnamed'
-                          }
-                          width={32}
-                          height={48}
-                          className='w-8 aspect-[2/3] object-cover rounded'
-                          quality={75}
-                        />
-                        <div className='flex-1'>
-                          <h3 className='text-sm text-white line-clamp-2 h-10'>
-                            {isMovieItem(item)
-                              ? item.title || 'Unnamed'
-                              : item.name || 'Unnamed'}
-                          </h3>
-                          <p>
-                            {(isMovieItem(item)
-                              ? item.release_date
-                              : item.first_air_date
-                            )?.split('-')[0] || 'N/A'}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))
-                ) : (
-                  // no results found message
-                  <div className='p-2 text-sm text-center text-gray-400'>
-                    No Results Found
-                  </div>
-                )}
-              </motion.div>
+        {/* mobile right controls: search + menu */}
+        <div className='hidden'>
+          <motion.button
+            className='text-white hover:text-white/80 cursor-pointer'
+            onClick={() => setIsMobileSearchVisible(!isMobileSearchVisible)}
+            whileTap={{ scale: 0.9 }}
+            aria-label='Toggle search'
+          >
+            <Search className='w-6 h-6' />
+          </motion.button>
+          <motion.button
+            className='text-white hover:text-white/80 cursor-pointer'
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            whileTap={{ scale: 0.9 }}
+            aria-label='Toggle menu'
+          >
+            {isMenuOpen ? (
+              <X className='w-6 h-6' />
+            ) : (
+              <Menu className='w-6 h-6' />
             )}
-          </AnimatePresence>
-        </motion.div>
+          </motion.button>
+        </div>
+
+        {/* mobile search overlay moved to top header */}
 
         {/* mobile navigation links */}
-        <nav className='flex flex-col items-center gap-2'>
+        <nav className='flex flex-col gap-6 mt-20'>
           {navLinks.map((link) => (
             <Link
               key={link.name}
