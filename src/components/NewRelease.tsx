@@ -5,7 +5,9 @@ import Card from '@/components/Card';
 import type { TMDBMovieSummary, PaginatedResponse } from '@/types/tmdb';
 
 // fetch a page of new release (now playing) movies from TMDB
-async function fetchNewReleasePage(page: number): Promise<PaginatedResponse<TMDBMovieSummary>> {
+async function fetchNewReleasePage(
+  page: number
+): Promise<PaginatedResponse<TMDBMovieSummary>> {
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   const res = await fetch(
     `https://api.themoviedb.org/3/movie/now_playing?api_key=${apiKey}&page=${page}`,
@@ -29,7 +31,7 @@ export default function NewRelease() {
     setIsLoading(true);
     fetchNewReleasePage(1).then((data) => {
       if (!mounted) return;
-      setMovies(data.results ?? []);
+      setMovies((data.results ?? []).slice(0, 15));
       setTotalPages(data.total_pages ?? 1);
       setPage(1);
       setIsLoading(false);
@@ -45,7 +47,7 @@ export default function NewRelease() {
     setIsLoading(true);
     const nextPage = page + 1;
     const data = await fetchNewReleasePage(nextPage);
-    setMovies((prev) => [...prev, ...(data.results ?? [])]);
+    setMovies(data.results?.slice(0, 15) ?? []);
     setPage(nextPage);
     setTotalPages(data.total_pages ?? nextPage);
     setIsLoading(false);
@@ -59,33 +61,34 @@ export default function NewRelease() {
 
       {/* grid 5 columns, stacked vertically */}
       {movies.length > 0 ? (
-        <div className='flex justify-center'>
+        <div className='relative flex justify-center'>
           <div
-            className='inline-grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-4 sm:gap-5 md:gap-6 max-w-[1400px] w-full '
+            className='inline-grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-4 sm:gap-5 md:gap-6 max-w-[1400px] w-full pb-16 md:pb-20'
             style={{ minWidth: 'min-content' }}
           >
             {movies.map((movie) => (
               <Card key={movie.id} media={movie} />
             ))}
           </div>
+
+          {/* bottom gradient overlay */}
+          <div className='pointer-events-none absolute bottom-0 left-0 w-full h-200 bg-gradient-to-t from-black to-transparent'></div>
+
+          {/* Load More button overlayed above cards */}
+          {page < totalPages && (
+            <button
+              onClick={loadMore}
+              disabled={isLoading}
+              className={`absolute left-1/2 -translate-x-1/2 bottom-50 px-5 py-2 rounded-full border border-white/10 bg-[#0F1117] text-white hover:bg-[#141822] transition-colors z-10 ${
+                isLoading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
+              }`}
+            >
+              {isLoading ? 'Loading...' : 'Load More'}
+            </button>
+          )}
         </div>
       ) : (
         <p className='text-gray-400'>No New Release Found</p>
-      )}
-
-      {/* Load More button */}
-      {page < totalPages && (
-        <div className='flex justify-center mt-6'>
-          <button
-            onClick={loadMore}
-            disabled={isLoading}
-            className={`px-5 py-2 rounded-full border border-white/10 bg-[#0F1117] text-white hover:bg-[#141822] transition-colors ${
-              isLoading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
-            }`}
-          >
-            {isLoading ? 'Loading...' : 'Load More'}
-          </button>
-        </div>
       )}
     </section>
   );

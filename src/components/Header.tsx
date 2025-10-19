@@ -155,12 +155,12 @@ export default function Header() {
         </nav>
 
         {/* search bar */}
-        <motion.div className='relative w-full md:w-1/3 md:mx-8 hidden md:block'>
-          <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400' />
+        <motion.div className='relative justify-between hidden md:block'>
+          <Search className='absolute left-3 top-1/2 -translate-y-1/2 size-5 text-gray-400' />
           <input
             type='text'
             placeholder='Search Movie'
-            className='w-full pl-10 pr-4 py-1.5 lg:py-3 bg-[#252B37]   hover:bg-[#252B37]/80 text-sm text-gray-300 focus:outline-none placeholder-gray-400 rounded-2xl border border-white/10 focus:border-white/30'
+            className='pl-10 pr-4 py-1.5 lg:py-3 bg-[#252B37]   hover:bg-[#252B37]/80 text-sm text-gray-300 focus:outline-none placeholder-gray-400 rounded-2xl border border-white/10 focus:border-white/30'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handleSearchKeyDown}
