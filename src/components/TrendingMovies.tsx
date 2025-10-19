@@ -67,7 +67,7 @@ export default function TrendingMovies() {
               </div>
             ))}
           </div>
-          <div className='pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-black to-transparent'></div>
+          <div className='pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-black/40 to-transparent'></div>
           {page < totalPages && (
             <button
               onClick={loadMore}

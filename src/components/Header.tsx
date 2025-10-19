@@ -14,9 +14,6 @@ import type {
   TMDBTvSummary,
 } from '@/types/tmdb';
 
-
-
-
 export default function Header() {
   const pathname = usePathname(); // using pathname to highlight the active navigation link
   const [isMenuOpen, setIsMenuOpen] = useState(false); // state for control mobile menu
@@ -116,12 +113,7 @@ export default function Header() {
         {/* logo section */}
         <div className='flex items-center justify-between w-full md:w-auto'>
           <Link href='/' className='flex flex-col items-center'>
-              <Image
-                src='/Logo.svg'
-                alt='Logo'
-                width={130}
-                height={40}
-              />
+            <Image src='/Logo.svg' alt='Logo' width={130} height={40} />
           </Link>
 
           {/* mobile menu toggle button */}
@@ -144,7 +136,7 @@ export default function Header() {
           <input
             type='text'
             placeholder='Search Movie'
-            className='w-full pl-10 pr-4 py-1.5 lg:py-3 bg-[#252B37] text-sm text-gray-300 focus:outline-none placeholder-gray-400 rounded-2xl border border-white/10 focus:border-white/30'
+            className='w-full pl-10 pr-4 py-1.5 lg:py-3 bg-[#252B37]   hover:bg-[#252B37]/80 text-sm text-gray-300 focus:outline-none placeholder-gray-400 rounded-2xl border border-white/10 focus:border-white/30'
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={handleSearchKeyDown}

@@ -140,14 +140,14 @@ export default function HeroSlider({
           <SwiperSlide key={media.id}>
             <div className='relative w-full h-[360px] sm:h-[480px] md:h-[720px]'>
               <div
-                className='absolute inset-0 bg-cover bg-center'
+                className='absolute inset-0 bg-cover bg-center '
                 style={{
                   backgroundImage: media.backdrop_path
                     ? `url(https://image.tmdb.org/t/p/w1280${media.backdrop_path})`
                     : `url(/default-poster.jpg)`,
                 }}
               ></div>
-              <div className='absolute inset-0 bg-gradient-to-b from-black/40 to-black/80'></div>
+              <div className='absolute inset-0 bg-gradient-to-b from-black/10 to-black'></div>
               <div className='absolute inset-0 flex items-center sm:items-end p-4 sm:p-8 md:p-20 text-white max-w-xs sm:max-w-md md:max-w-2xl'>
                 <div>
                   <Link
