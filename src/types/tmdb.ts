@@ -46,7 +46,7 @@ export interface TMDBVideosResponse {
 }
 
 export interface TMDBCredits {
-  cast: { name: string; profile_path?: string | null }[];
+  cast: { name: string; profile_path?: string | null; character?: string }[];
   crew?: { name: string; job?: string }[];
 }
 

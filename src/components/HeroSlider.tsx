@@ -9,7 +9,14 @@ import 'swiper/css/effect-fade';
 import Link from 'next/link';
 import useSWR from 'swr';
 import TrailerModal from './TrailerModal';
-import type { TMDBItem, TMDBVideosResponse, TMDBVideo, MediaType, TMDBMovieSummary, TMDBTvSummary } from '@/types/tmdb';
+import type {
+  TMDBItem,
+  TMDBVideosResponse,
+  TMDBVideo,
+  MediaType,
+  TMDBMovieSummary,
+  TMDBTvSummary,
+} from '@/types/tmdb';
 import type { Swiper as SwiperInstance } from 'swiper';
 import { PlayCircle } from 'lucide-react';
 
@@ -27,15 +34,25 @@ type MediaWithExtras = TMDBItem & {
   runtime?: number;
 };
 
-export default function HeroSlider({ movies = [] }: { movies?: MediaWithExtras[] }) {
+export default function HeroSlider({
+  movies = [],
+}: {
+  movies?: MediaWithExtras[];
+}) {
   const [currentSlide, setCurrentSlide] = useState(0); // state to track the current slide index
-  const [swiperInstance, setSwiperInstance] = useState<SwiperInstance | null>(null); // store swiper instance for controlling slide navigation
+  const [swiperInstance, setSwiperInstance] = useState<SwiperInstance | null>(
+    null
+  ); // store swiper instance for controlling slide navigation
   const [isModalOpen, setIsModalOpen] = useState(false); // state to show or hide the trailer modal
-  const [selectedMedia, setSelectedMedia] = useState<MediaWithExtras | null>(null); // state to store the selected media to display the trailer
+  const [selectedMedia, setSelectedMedia] = useState<MediaWithExtras | null>(
+    null
+  ); // state to store the selected media to display the trailer
 
   // create a function to get the media title
-  const isMovie = (item: TMDBItem): item is TMDBMovieSummary => item.media_type === 'movie';
-  const isTv = (item: TMDBItem): item is TMDBTvSummary => item.media_type === 'tv';
+  const isMovie = (item: TMDBItem): item is TMDBMovieSummary =>
+    item.media_type === 'movie';
+  const isTv = (item: TMDBItem): item is TMDBTvSummary =>
+    item.media_type === 'tv';
   const getMediaTitle = (media: TMDBItem): string => {
     if (isMovie(media)) {
       return media.title || 'Untitled';
@@ -89,7 +106,7 @@ export default function HeroSlider({ movies = [] }: { movies?: MediaWithExtras[]
   );
 
   // build the youtube embed URL for the trailer if it founds
-  const trailerUrl = trailer 
+  const trailerUrl = trailer
     ? `https://www.youtube.com/embed/${trailer.key}?autoplay=1&playsinline=1&mute=1&controls=1&rel=0&modestbranding=1`
     : null;
 
@@ -112,7 +129,9 @@ export default function HeroSlider({ movies = [] }: { movies?: MediaWithExtras[]
         effect='fade'
         autoplay={{ delay: 5000, disableOnInteraction: false }}
         loop={movies.length > 1}
-        onSlideChange={(swiper: SwiperInstance) => setCurrentSlide(swiper.realIndex)}
+        onSlideChange={(swiper: SwiperInstance) =>
+          setCurrentSlide(swiper.realIndex)
+        }
         onSwiper={(swiper: SwiperInstance) => setSwiperInstance(swiper)}
         className='w-full h-full'
       >
@@ -132,7 +151,9 @@ export default function HeroSlider({ movies = [] }: { movies?: MediaWithExtras[]
               <div className='absolute inset-0 flex items-center sm:items-end p-4 sm:p-8 md:p-20 text-white max-w-xs sm:max-w-md md:max-w-2xl'>
                 <div>
                   <Link
-                    href={`/details?id=${media.id}&media_type=${media.media_type ?? 'movie'}`}
+                    href={`/details?id=${media.id}&media_type=${
+                      media.media_type ?? 'movie'
+                    }`}
                   >
                     <h1 className='text-2xl sm:text-2xl md:text-5xl font-bold leading-tight sm:leading-snug'>
                       {getMediaTitle(media)}
@@ -146,7 +167,10 @@ export default function HeroSlider({ movies = [] }: { movies?: MediaWithExtras[]
                   </p>
                   <p className='text-sm sm:text-sm md:text-lg mt-5 sm:leading-5'>
                     <span className='mr-4'>
-                      ⭐ {media.vote_average != null ? media.vote_average.toFixed(1) : 'N/A'}
+                      ⭐{' '}
+                      {media.vote_average != null
+                        ? media.vote_average.toFixed(1)
+                        : 'N/A'}
                     </span>
                     {media.media_type === 'movie' && (
                       <>
@@ -157,24 +181,29 @@ export default function HeroSlider({ movies = [] }: { movies?: MediaWithExtras[]
                   </p>
                   <div className='mt-5 sm:mt-8 flex items-center gap-3'>
                     <button
-                       onClick={() => openModal(media)}
-                       disabled={!media.id}
-                       className={`inline-flex items-center gap-2 bg-[#961200] px-4 sm:px-4 py-2 sm:py-2 md:px-6 md:py-3 text-white font-semibold rounded-full hover:bg-[#961200]/70 transition text-sm sm:text-base md:text-base ${
-                         !media.id
-                           ? 'cursor-not-allowed opacity-50'
-                           : 'cursor-pointer'
-                       }`}
-                     >
-                       Watch Trailer
-                       <PlayCircle className='w-5 h-5' />
-                     </button>
+                      onClick={() => openModal(media)}
+                      disabled={!media.id}
+                      className={`inline-flex items-center gap-2 bg-[#961200] px-4 sm:px-4 py-2 sm:py-2 md:px-6 md:py-3 text-white font-semibold rounded-full hover:bg-[#961200]/70 transition text-sm sm:text-base md:text-base ${
+                        !media.id
+                          ? 'cursor-not-allowed opacity-50'
+                          : 'cursor-pointer'
+                      }`}
+                    >
+                      Watch Trailer
+                      <PlayCircle className='w-5 h-5' />
+                    </button>
                     <Link
                       href={{
                         pathname: '/details',
-                        query: { id: media.id, media_type: media.media_type ?? 'movie' },
+                        query: {
+                          id: media.id,
+                          media_type: media.media_type ?? 'movie',
+                        },
                       }}
                       className={`inline-block bg-[#0F1117] px-4 sm:px-4 py-2 sm:py-2 md:px-6 md:py-3 text-white font-semibold rounded-full border border-white/10 hover:bg-[#0F1117]/80 transition text-sm sm:text-base md:text-base ${
-                        !media.id ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+                        !media.id
+                          ? 'pointer-events-none opacity-50'
+                          : 'cursor-pointer'
                       }`}
                     >
                       See Detail

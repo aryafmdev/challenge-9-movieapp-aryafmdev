@@ -29,6 +29,7 @@ export default function Header() {
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Movies', href: '/movies' },
+    { name: 'Favorites', href: '/favorites' },
   ];
 
   // fetch search suggestions from TMDB based on input value
