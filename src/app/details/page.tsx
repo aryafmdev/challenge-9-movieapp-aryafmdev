@@ -226,10 +226,10 @@ function DetailsPageContent() {
       </section>
 
       {/* main details section */}
-      <section className='container mx-auto px-6 sm:px-12 md:px-40 rounded-b-lg z-10 relative mt-[-120px] sm:mt-[-240px] md:mt-[-360px]'>
-        <div className='bg-transparent flex flex-col md:flex-row gap-6 sm:gap-8 pt-4 pb-6 sm:pt-6 sm:pb-8 rounded-b-lg'>
+      <section className=' container mx-auto px-6 sm:px-12 md:px-40 rounded-b-lg z-10 relative mt-[-120px] sm:mt-[-240px] md:mt-[-360px]'>
+        <div className='-mt-100 md:mt-0 bg-transparent flex flex-col md:flex-row gap-6 sm:gap-8 pt-4 pb-6 sm:pt-6 sm:pb-8 rounded-b-lg'>
           {/* poster and trailer button */}
-          <div className='flex-none w-50 sm:max-w-[300px] mx-auto md:mx-0 flex flex-col items-center'>
+          <div className='hidden md:flex flex-none w-50 sm:max-w-[300px] mx-auto md:mx-0 flex flex-col items-center'>
             <Image
               src={
                 media.poster_path
@@ -239,7 +239,7 @@ function DetailsPageContent() {
               alt={getTitle() || 'Poster'}
               width={300}
               height={450}
-              className='w-auto object-cover rounded-lg'
+              className='w-1/2 md:w-full rounded-lg'
               quality={75}
             />
           </div>
@@ -261,7 +261,7 @@ function DetailsPageContent() {
               <button
                 onClick={openModal}
                 disabled={!trailerUrl}
-                className={`inline-flex items-center gap-2 justify-center bg-[#961200] text-white px-4 py-2 sm:px-6 sm:py-2 rounded-full font-medium text-xs sm:text-sm hover:bg-[#961200]/70 transition-colors ${
+                className={`inline-flex items-center gap-2 justify-center bg-[#961200] text-white px-4 py-2 sm:px-6 sm:py-2 rounded-full font-medium text-xs sm:text-sm hover:bg-[#961200]/70 transition-colors w-full sm:w-auto ${
                   !trailerUrl
                     ? 'opacity-50 cursor-not-allowed'
                     : 'cursor-pointer'
@@ -285,7 +285,7 @@ function DetailsPageContent() {
               </button>
             </div>
 
-            <div className='grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-5'>
+            <div className='grid grid-cols-3 gap-3 sm:gap-4 mt-5'>
               <div className='flex flex-col items-center gap-3 px-4 py-3 rounded-xl border border-white/10 bg-black'>
                 <Star className='size-8 text-yellow-400 fill-current' />
                 <div>
@@ -299,7 +299,7 @@ function DetailsPageContent() {
                 <Video className='size-8 text-white fill-current' />
                 <div>
                   <p className='text-xs text-gray-400 text-center'>Genre</p>
-                  <p className='text-sm text-center sm:text-base font-semibold'>
+                  <p className='text-sm text-center sm:text-base font-semibold line-clamp-1'>
                     {getGenres()}
                   </p>
                 </div>
@@ -331,7 +331,7 @@ function DetailsPageContent() {
           <h3 className='text-base sm:text-lg md:text-xl font-semibold mb-3'>
             Cast & Crew
           </h3>
-          <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6'>
+          <div className='grid grid-cols sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6'>
             {getCast().map((actor, index) => (
               <div key={index} className='flex items-center gap-3'>
                 <Image
