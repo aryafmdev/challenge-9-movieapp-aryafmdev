@@ -3,10 +3,12 @@
 import { useEffect, useState } from 'react';
 import Card from '@/components/Card';
 import type { TMDBMovieSummary, PaginatedResponse } from '@/types/tmdb';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, ChevronLeft } from 'lucide-react';
 
 // fetch a page of trending movies of the week from TMDB
-async function fetchTrendingMoviesPage(page: number): Promise<PaginatedResponse<TMDBMovieSummary>> {
+async function fetchTrendingMoviesPage(
+  page: number
+): Promise<PaginatedResponse<TMDBMovieSummary>> {
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   const res = await fetch(
     `https://api.themoviedb.org/3/trending/movie/week?api_key=${apiKey}&page=${page}`,
@@ -51,6 +53,17 @@ export default function TrendingMovies() {
     setTotalPages(data.total_pages ?? nextPage);
     setIsLoading(false);
   };
+  const loadPrev = async (): Promise<void> => {
+    if (isLoading) return;
+    if (page <= 1) return;
+    setIsLoading(true);
+    const prevPage = page - 1;
+    const data = await fetchTrendingMoviesPage(prevPage);
+    setMovies(data.results ?? []);
+    setPage(prevPage);
+    setTotalPages(data.total_pages ?? totalPages);
+    setIsLoading(false);
+  };
 
   return (
     <section className='py-8 px-4 sm:px-6 md:px-20 bg-black text-white'>
@@ -67,14 +80,27 @@ export default function TrendingMovies() {
               </div>
             ))}
           </div>
-          <div className='pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-black/40 to-transparent'></div>
+          <div className='pointer-events-none absolute right-0 top-0 h-full w-16 bg-gradient-to-l from-black to-transparent'></div>
+          <div className='pointer-events-none absolute left-0 top-0 h-full w-16 bg-gradient-to-r from-black to-transparent'></div>
+          <button
+            onClick={loadPrev}
+            disabled={isLoading || page <= 1}
+            aria-label='Previous trending'
+            className={`absolute left-3 top-1/2 -translate-y-1/2 size-10 sm:size-12 rounded-full bg-[#0F1117]/80 text-white border border-white/10 shadow-lg hover:bg-[#141822] transition-colors z-10 ${
+              isLoading || page <= 1
+                ? 'opacity-60 cursor-default'
+                : 'cursor-pointer'
+            }`}
+          >
+            <ChevronLeft className='size-10 items-center justify-center' />
+          </button>
           {page < totalPages && (
             <button
               onClick={loadMore}
               disabled={isLoading}
               aria-label='Next trending'
               className={`absolute right-3 top-1/2 -translate-y-1/2 size-10 sm:size-12 rounded-full bg-[#0F1117]/80 text-white border border-white/10 shadow-lg hover:bg-[#141822] transition-colors z-10 ${
-                isLoading ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'
+                isLoading ? 'opacity-60 cursor-default' : 'cursor-pointer'
               }`}
             >
               <ChevronRight className='size-10 items-center justify-center' />
@@ -84,8 +110,6 @@ export default function TrendingMovies() {
       ) : (
         <p className='text-gray-400'>No Trending Movies Found</p>
       )}
-
-
     </section>
   );
 }

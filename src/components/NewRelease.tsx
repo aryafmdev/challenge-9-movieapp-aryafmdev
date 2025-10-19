@@ -61,8 +61,8 @@ export default function NewRelease() {
       {movies.length > 0 ? (
         <div className='flex justify-center'>
           <div
-            className='inline-grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-4 sm:gap-5 md:gap-6 max-w-[1400px] w-full'
-             style={{ minWidth: 'min-content' }}
+            className='inline-grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 justify-items-center gap-4 sm:gap-5 md:gap-6 max-w-[1400px] w-full '
+            style={{ minWidth: 'min-content' }}
           >
             {movies.map((movie) => (
               <Card key={movie.id} media={movie} />
