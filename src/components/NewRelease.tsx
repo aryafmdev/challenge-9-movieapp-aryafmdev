@@ -41,13 +41,14 @@ export default function NewRelease() {
     };
   }, []);
 
+  // load more movies
   const loadMore = async (): Promise<void> => {
     if (isLoading) return;
     if (page >= totalPages) return;
     setIsLoading(true);
     const nextPage = page + 1;
     const data = await fetchNewReleasePage(nextPage);
-    setMovies(data.results?.slice(0, 15) ?? []);
+    setMovies((prev) => [...prev, ...(data.results ?? [])]);
     setPage(nextPage);
     setTotalPages(data.total_pages ?? nextPage);
     setIsLoading(false);

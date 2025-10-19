@@ -53,6 +53,7 @@ export interface TMDBCredits {
 export interface TMDBDetailedMovie extends TMDBMovieSummary {
   genres?: Genre[];
   runtime?: number;
+  adult?: boolean;
 }
 
 export interface TMDBDetailedTv extends TMDBTvSummary {
