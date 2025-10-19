@@ -39,7 +39,7 @@ export default function Card({ media }: { media: TMDBItem }) {
 
       <div className='p-4 flex flex-col gap-2'>
         <Link href={`/details?id=${id}&media_type=${mediaType}`}>
-          <h3 className='text-sm font-semibold text-white line-clamp-1 h-6 cursor-pointer hover:underline'>
+          <h3 className='text-sm font-semibold text-white line-clamp-2 h-10 cursor-pointer hover:underline'>
             {displayTitle}
           </h3>
         </Link>

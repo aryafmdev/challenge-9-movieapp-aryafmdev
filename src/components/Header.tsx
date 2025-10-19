@@ -130,6 +130,30 @@ export default function Header() {
           </motion.button>
         </div>
 
+        {/* navigation links */}
+        <nav className='hidden md:flex md:items-center md:space-x-6 md:w-1/3 md:justify-center'>
+          {navLinks.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              className={`text-sm sm:text-base font-medium relative text-white ${
+                pathname === link.href ? 'text-white' : 'hover:text-white/80'
+              }`}
+            >
+              {link.name}
+
+              {/* underline animation for active link */}
+              {pathname === link.href && (
+                <motion.span
+                  className='absolute left-0 right-0 bottom-0 h-0.5 bg-yellow-400'
+                  layoutId='underline'
+                  transition={{ duration: 0.3 }}
+                />
+              )}
+            </Link>
+          ))}
+        </nav>
+
         {/* search bar */}
         <motion.div className='relative w-full md:w-1/3 md:mx-8 hidden md:block'>
           <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400' />
@@ -217,30 +241,6 @@ export default function Header() {
             )}
           </AnimatePresence>
         </motion.div>
-
-        {/* navigation links */}
-        <nav className='hidden md:flex md:items-center md:space-x-6'>
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              className={`text-sm sm:text-base font-medium relative text-white ${
-                pathname === link.href ? 'text-white' : 'hover:text-white/80'
-              }`}
-            >
-              {link.name}
-
-              {/* underline animation for active link */}
-              {pathname === link.href && (
-                <motion.span
-                  className='absolute left-0 right-0 bottom-0 h-0.5 bg-yellow-400'
-                  layoutId='underline'
-                  transition={{ duration: 0.3 }}
-                />
-              )}
-            </Link>
-          ))}
-        </nav>
       </div>
 
       {/* mobile menu */}
